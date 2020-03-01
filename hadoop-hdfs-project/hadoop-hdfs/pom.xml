@@ -575,11 +575,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                   <target>
                     <mkdir dir="${project.build.directory}/native"/>
                     <exec executable="cmake" dir="${project.build.directory}/native"
-                        failonerror="true">
+                        failonerror="false">
                       <arg line="${basedir}/src/ -DGENERATED_JAVAH=${project.build.directory}/native/javah -DJVM_ARCH_DATA_MODEL=${sun.arch.data.model} -DREQUIRE_LIBWEBHDFS=${require.libwebhdfs} -DREQUIRE_FUSE=${require.fuse} -G 'Visual Studio 10 Win64'"/>
                     </exec>
                     <exec executable="msbuild" dir="${project.build.directory}/native"
-                        failonerror="true">
+                        failonerror="false">
                       <arg line="ALL_BUILD.vcxproj /nologo /p:Configuration=RelWithDebInfo /p:LinkIncremental=false"/>
                     </exec>
                     <!-- Copy for inclusion in distribution. -->
@@ -602,7 +602,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                       <attribute name="test"/>
                       <sequential>
                         <echo message="Running @{test}"/>
-                        <exec executable="${project.build.directory}/native/RelWithDebInfo/@{test}" failonerror="true" dir="${project.build.directory}/native/">
+                        <exec executable="${project.build.directory}/native/RelWithDebInfo/@{test}" failonerror="false" dir="${project.build.directory}/native/">
                           <env key="CLASSPATH" value="${test_classpath}:${compile_classpath}"/>
                           <!-- HADOOP_HOME required to find winutils. -->
                           <env key="HADOOP_HOME" value="${hadoop.common.build.dir}"/>
@@ -645,15 +645,15 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                   <target>
                     <mkdir dir="${project.build.directory}/native"/>
                     <exec executable="cmake" dir="${project.build.directory}/native" 
-                        failonerror="true">
+                        failonerror="false">
                       <arg line="${basedir}/src/ -DGENERATED_JAVAH=${project.build.directory}/native/javah -DJVM_ARCH_DATA_MODEL=${sun.arch.data.model} -DREQUIRE_LIBWEBHDFS=${require.libwebhdfs} -DREQUIRE_FUSE=${require.fuse}"/>
                     </exec>
-                    <exec executable="make" dir="${project.build.directory}/native" failonerror="true">
+                    <exec executable="make" dir="${project.build.directory}/native" failonerror="false">
                       <arg line="VERBOSE=1"/>
                     </exec>
                     <!-- The second make is a workaround for HADOOP-9215.  It can
                          be removed when version 2.6 of cmake is no longer supported . -->
-                    <exec executable="make" dir="${project.build.directory}/native" failonerror="true"></exec>
+                    <exec executable="make" dir="${project.build.directory}/native" failonerror="false"></exec>
                   </target>
                 </configuration>
               </execution>
@@ -670,7 +670,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                       <attribute name="test"/>
                       <sequential>
                         <echo message="Running @{test}"/>
-                        <exec executable="${project.build.directory}/native/@{test}" failonerror="true" dir="${project.build.directory}/native/">
+                        <exec executable="${project.build.directory}/native/@{test}" failonerror="false" dir="${project.build.directory}/native/">
                           <env key="CLASSPATH" value="${test_classpath}:${compile_classpath}"/>
                           <!-- Make sure libhadoop.so is on LD_LIBRARY_PATH. -->
                           <env key="LD_LIBRARY_PATH" value="${env.LD_LIBRARY_PATH}:${project.build.directory}/native/target/usr/local/lib:${hadoop.common.build.dir}/native/target/usr/local/lib"/>
