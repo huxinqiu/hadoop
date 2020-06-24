@@ -179,6 +179,7 @@ public class BlockManager {
   private final InvalidateBlocks invalidateBlocks;
   
   /**
+   * 推迟操作的副本，但是存在stale状态的副本，所以推迟处理
    * After a failover, over-replicated blocks may not be handled
    * until all of the replicas have done a block report to the
    * new active. This is to make sure that this NameNode has been
@@ -1310,6 +1311,10 @@ public class BlockManager {
 
   /** Replicate a set of blocks
    *
+   * 1、选择源节点
+   * 2、选择目标节点
+   * 3、进行复制操作
+   *
    * @param blocksToReplicate blocks to be replicated, for each priority
    * @return the number of blocks scheduled for replication
    */
@@ -1327,11 +1332,14 @@ public class BlockManager {
     namesystem.writeLock();
     try {
       synchronized (neededReplications) {
+        // 选择源节点
         for (int priority = 0; priority < blocksToReplicate.size(); priority++) {
           for (Block block : blocksToReplicate.get(priority)) {
             // block should belong to a file
             bc = blocksMap.getBlockCollection(block);
             // abandoned block or block reopened for append
+            // block不属于一个文件
+            // 或block所属文件正在构建，并且是该文件最后一个block则不备份
             if(bc == null || (bc.isUnderConstruction() && block.equals(bc.getLastBlock()))) {
               neededReplications.remove(block, priority); // remove from neededReplications
               neededReplications.decrementReplicationIndex(priority);
@@ -1387,11 +1395,13 @@ public class BlockManager {
       namesystem.writeUnlock();
     }
 
+    // 选择目标节点
     final Set<Node> excludedNodes = new HashSet<Node>();
     for(ReplicationWork rw : work){
       // Exclude all of the containing nodes from being targets.
       // This list includes decommissioning or corrupt nodes.
       excludedNodes.clear();
+      // 排除数据块已有副本所在DataNode
       for (DatanodeDescriptor dn : rw.containingNodes) {
         excludedNodes.add(dn);
       }
@@ -1402,6 +1412,7 @@ public class BlockManager {
       rw.chooseTargets(blockplacement, storagePolicySuite, excludedNodes);
     }
 
+    // 进行复制操作
     namesystem.writeLock();
     try {
       for(ReplicationWork rw : work){
@@ -1469,6 +1480,7 @@ public class BlockManager {
           }
 
           // remove from neededReplications
+          // 如果副本系数足够，则从neededReplications队列中移除
           if(numEffectiveReplicas + targets.length >= requiredReplication) {
             neededReplications.remove(block, priority); // remove from neededReplications
             neededReplications.decrementReplicationIndex(priority);
@@ -2354,6 +2366,13 @@ public class BlockManager {
   }
 
   /**
+   * 添加副本
+   * 1、将数据块加入Namenode内存
+   * 2、更新块状态
+   * 3、更新neededReplications队列
+   * 4、更新excessReplicateMap队列
+   * 5、更新corruptReplicas队列
+   *
    * Modify (block-->datanode) map. Remove block from set of
    * needed replications if this takes care of the problem.
    * @return the block that is stored in blockMap.
@@ -2713,6 +2732,13 @@ public class BlockManager {
   }
 
   /**
+   * 1、筛选副本删除操作的Databode，剔除以下节点：
+   *     已在excessReplicateMap中的节点，
+   *     正在撤销的节点，
+   *     已经撤销的节点，
+   *     已经损坏的节点
+   * 2、执行删除
+   *
    * Find how many of the containing nodes are "extra", if any.
    * If there are any extras, call chooseExcessReplicates() to
    * mark them in the excessReplicateMap.

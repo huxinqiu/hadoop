@@ -192,6 +192,7 @@ class InvalidateBlocks {
       remove(dn);
     }
 
+    // 在Datanode中保存需要删除的副本，在下一次心跳时发出删除指令
     dn.addBlocksToBeInvalidated(toInvalidate);
     numBlocks -= toInvalidate.size();
     return toInvalidate;

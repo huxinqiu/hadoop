@@ -856,6 +856,7 @@ public class DatanodeManager {
       // Over-replicated blocks will be detected and processed when 
       // the dead node comes back and send in its full block report.
       if (node.isAlive) {
+        // 删除节点重新上架造成超出的副本系数
         blockManager.processOverReplicatedBlocksOnReCommission(node);
       }
     }
@@ -906,7 +907,8 @@ public class DatanodeManager {
       DatanodeDescriptor nodeS = getDatanode(nodeReg.getDatanodeUuid());
       DatanodeDescriptor nodeN = host2DatanodeMap.getDatanodeByXferAddr(
           nodeReg.getIpAddr(), nodeReg.getXferPort());
-        
+
+      // 已经注册的Datanode使用新的storageId注册
       if (nodeN != null && nodeN != nodeS) {
         NameNode.LOG.info("BLOCK* registerDatanode: " + nodeN);
         // nodeN previously served a different data storage, 
@@ -916,7 +918,8 @@ public class DatanodeManager {
         wipeDatanode(nodeN);
         nodeN = null;
       }
-  
+
+      // Datanode刷新注册
       if (nodeS != null) {
         if (nodeN == nodeS) {
           // The same datanode has been just restarted to serve the same data 
@@ -980,6 +983,7 @@ public class DatanodeManager {
         return;
       }
 
+      // 将新注册的Datanode添加到datanodeMap以及host2DatanodeMap
       DatanodeDescriptor nodeDescr 
         = new DatanodeDescriptor(nodeReg, NetworkTopology.DEFAULT_RACK);
       boolean success = false;
@@ -1378,12 +1382,14 @@ public class DatanodeManager {
           return new DatanodeCommand[]{RegisterCommand.REGISTER};
         }
         
-        // Check if this datanode should actually be shutdown instead. 
+        // Check if this datanode should actually be shutdown instead.
+        // 检查datanode是否能连接到namespace
         if (nodeinfo != null && nodeinfo.isDisallowed()) {
           setDatanodeDead(nodeinfo);
           throw new DisallowedDatanodeException(nodeinfo);
         }
 
+        // datanode未在节点注册过，下发注册指令
         if (nodeinfo == null || !nodeinfo.isAlive) {
           return new DatanodeCommand[]{RegisterCommand.REGISTER};
         }

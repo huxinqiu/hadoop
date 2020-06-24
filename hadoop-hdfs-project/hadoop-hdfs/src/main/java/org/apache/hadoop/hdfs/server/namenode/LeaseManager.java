@@ -76,15 +76,18 @@ public class LeaseManager {
   //
   // Used for handling lock-leases
   // Mapping: leaseHolder -> Lease
-  //
+  // 客户端可以打开多个文件进行读写，为了便于管理
+  // 将一个客户端打开的所有文件组织在一起构成一条记录 ---> Lease
   private final SortedMap<String, Lease> leases = new TreeMap<String, Lease>();
   // Set of: Lease
+  // 以租约更新时间为顺序，保存了所有租约，
+  // 如更新时间相同，则按照租约持有者的字典序保存
   private final SortedSet<Lease> sortedLeases = new TreeSet<Lease>();
 
   // 
   // Map path names to leases. It is protected by the sortedLeases lock.
   // The map stores pathnames in lexicographical order.
-  //
+  // 以路径字典序保存所有租约
   private final SortedMap<String, Lease> sortedLeasesByPath = new TreeMap<String, Lease>();
 
   private Daemon lmthread;

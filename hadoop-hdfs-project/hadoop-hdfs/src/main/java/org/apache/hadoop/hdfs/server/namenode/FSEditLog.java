@@ -241,7 +241,10 @@ public class FSEditLog implements LogsPurgeable {
     initJournals(this.editsDirs);
     state = State.BETWEEN_LOG_SEGMENTS;
   }
-  
+
+  /**
+   * 用于HA
+   */
   public synchronized void initSharedJournalsForRead() {
     if (state == State.OPEN_FOR_READING) {
       LOG.warn("Initializing shared journals for READ, already open for READ",

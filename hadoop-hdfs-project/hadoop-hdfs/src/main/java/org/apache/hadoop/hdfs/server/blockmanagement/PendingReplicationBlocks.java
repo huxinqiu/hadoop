@@ -46,7 +46,13 @@ import org.apache.hadoop.util.Daemon;
 class PendingReplicationBlocks {
   private static final Log LOG = BlockManager.LOG;
 
+  /**
+   * PendingBlockInfo：保存了该数据块所在节点以及上一次复制的时间戳
+    */
   private final Map<Block, PendingBlockInfo> pendingReplications;
+  /**
+   * 过期的复制请求
+   */
   private final ArrayList<Block> timedOutItems;
   Daemon timerThread = null;
   private volatile boolean fsRunning = true;

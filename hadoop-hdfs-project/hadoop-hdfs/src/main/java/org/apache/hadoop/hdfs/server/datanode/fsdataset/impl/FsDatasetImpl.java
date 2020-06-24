@@ -107,6 +107,8 @@ import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.hadoop.util.Time;
 
 /**************************************************
+ * 1、创建数据库块文件
+ * 2、维护数据块文件与数据块校验文件的对应关系
  * FSDataset manages a set of data blocks.  Each block
  * has a unique name and an extent on disk.
  *

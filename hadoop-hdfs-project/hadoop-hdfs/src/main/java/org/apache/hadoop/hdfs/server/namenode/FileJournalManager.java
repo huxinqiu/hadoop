@@ -51,6 +51,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
 /**
+ * editlog写入文件系统
  * Journal manager for the common case of edits files being written
  * to a storage directory.
  * 

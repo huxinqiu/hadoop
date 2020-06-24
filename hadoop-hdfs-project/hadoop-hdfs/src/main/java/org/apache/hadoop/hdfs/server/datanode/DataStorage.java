@@ -375,6 +375,7 @@ public class DataStorage extends Storage {
   }
 
   /**
+   * 用于在所有目录上初始化指定块池
    * Analyze storage directories.
    * Recover from previous transitions if required.
    * Perform fs state transition if necessary depending on the namespace info.
@@ -671,6 +672,7 @@ public class DataStorage extends Storage {
   }
 
   /**
+   * 对单个目录下的指定块池进行升级
    * Upgrade -- Move current storage into a backup directory,
    * and hardlink all its blocks into the new current directory.
    * 

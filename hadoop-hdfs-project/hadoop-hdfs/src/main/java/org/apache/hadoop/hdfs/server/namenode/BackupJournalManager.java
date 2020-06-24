@@ -27,6 +27,7 @@ import org.apache.hadoop.hdfs.server.protocol.NamenodeRegistration;
 import org.apache.hadoop.hdfs.server.protocol.NamespaceInfo;
 
 /**
+ * editlog写入共享NFS
  * A JournalManager implementation that uses RPCs to log transactions
  * to a BackupNode.
  */
