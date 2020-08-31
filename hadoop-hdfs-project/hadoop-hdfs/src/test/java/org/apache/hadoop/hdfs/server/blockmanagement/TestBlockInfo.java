@@ -21,9 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,6 +43,37 @@ public class TestBlockInfo {
   private static final Log LOG = LogFactory
       .getLog("org.apache.hadoop.hdfs.TestBlockInfo");
 
+  private List<Integer> arrayList;
+
+  private LinkedList<Integer> integers;
+
+  private Map<String, Integer> map;
+
+  @Test
+  public void testArrayList() throws InterruptedException {
+    arrayList = new ArrayList<Integer>(2);
+    arrayList.add(1);
+    arrayList.add(2);
+    Thread.sleep(600000);
+  }
+
+  @Test
+  public void testHashMapMemory() throws InterruptedException {
+    map = new HashMap<String, Integer>();
+    map.put("1", 1);
+    map.put("2", 2);
+    map.put("3", 3);
+    Thread.sleep(600000);
+  }
+
+  @Test
+  public void testLinkdeListMemory() throws InterruptedException {
+    integers = new LinkedList<Integer>();
+    integers.add(1);
+    integers.add(2);
+    integers.add(3);
+    Thread.sleep(600000);
+  }
 
   @Test
   public void testAddStorage() throws Exception {

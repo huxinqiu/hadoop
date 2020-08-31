@@ -200,6 +200,7 @@ class BlockReaderLocal implements BlockReader {
   private final int maxReadaheadLength;
 
   /**
+   * 始终保持为校验块的整数倍
    * Buffers data starting at the current dataPos and extending on
    * for dataBuf.limit().
    *
@@ -400,6 +401,7 @@ class BlockReaderLocal implements BlockReader {
       }
       int nRead;
       try {
+        // 可以跳过数据校验并且不需要预读取时
         if (canSkipChecksum && zeroReadaheadRequested) {
           nRead = readWithoutBounceBuffer(buf);
         } else {
@@ -500,6 +502,9 @@ class BlockReaderLocal implements BlockReader {
     }
     boolean eof = true, done = false;
     do {
+      // dataBuf缓冲区大小是 maxReadaheadLength，长度始终是校验块的整数倍
+      // 如果读取buf是直接内存并且大于maxReadahead，并且当前读取pos与校验对齐
+      // 则可以一次将maxReadahead字节读到user buf中，跳过dataBuf
       if (buf.isDirect() && (buf.remaining() >= maxReadaheadLength)
             && ((dataPos % bytesPerChecksum) == 0)) {
         // Fast lane: try to read directly into user-supplied buffer, bypassing

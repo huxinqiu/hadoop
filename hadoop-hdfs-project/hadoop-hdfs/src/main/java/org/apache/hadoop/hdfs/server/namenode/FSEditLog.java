@@ -413,6 +413,8 @@ public class FSEditLog implements LogsPurgeable {
         "bad state: " + state;
       
       // wait if an automatic sync is scheduled
+      // 只有在前一个线程交换了doubleBuffer之后，才能继续写
+      // 否则可能会写到doubleBuffer中正在做flush的缓冲区中去
       waitIfAutoSyncScheduled();
       
       long start = beginTransaction();

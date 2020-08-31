@@ -54,6 +54,7 @@ import org.htrace.Span;
 import com.google.protobuf.Message;
 
 /** Sender */
+/* 发起流式接口请求 */
 @InterfaceAudience.Private
 @InterfaceStability.Evolving
 public class Sender implements DataTransferProtocol {
@@ -203,6 +204,7 @@ public class Sender implements DataTransferProtocol {
     send(out, Op.RELEASE_SHORT_CIRCUIT_FDS, proto);
   }
 
+  /* 获取保存短路读取数据块的共享内存 */
   @Override
   public void requestShortCircuitShm(String clientName) throws IOException {
     ShortCircuitShmRequestProto.Builder builder =

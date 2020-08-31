@@ -1557,8 +1557,7 @@ public class NameNode implements NameNodeStatusMXBean {
       String safemodeTip = namesystem.getSafeModeTip();
       if (!safemodeTip.isEmpty()) {
         ret.setNotReadyToBecomeActive(
-            "The NameNode is in safemode. " +
-            safemodeTip);
+            "The NameNode is in safemode. " + safemodeTip);
       } else {
         ret.setReadyToBecomeActive();
       }

@@ -84,7 +84,10 @@ public abstract class INodeWithAdditionalFields extends INode
    *  side should change accordingly.
    */
   private byte[] name = null;
-  /** 
+  /**
+   * 前16bit：文件模式标识（777）
+   * 中间25bit：用户组标识（group）
+   * 最后23bit：用户名标识（user）
    * Permission encoded using {@link PermissionStatusFormat}.
    * Codes other than {@link #clonePermissionStatus(INodeWithAdditionalFields)}
    * and {@link #updatePermissionStatus(PermissionStatusFormat, long)}

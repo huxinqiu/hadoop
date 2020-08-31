@@ -146,7 +146,8 @@ class BlockPoolManager {
       bpos.join();
     }
   }
-  
+
+  /* 根据HDFS配置添加、删除、更新命名空间 */
   void refreshNamenodes(Configuration conf)
       throws IOException {
     LOG.info("Refresh request received for nameservices: " + conf.get

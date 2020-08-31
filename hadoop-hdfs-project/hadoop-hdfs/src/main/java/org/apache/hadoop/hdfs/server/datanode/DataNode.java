@@ -287,6 +287,7 @@ public class DataNode extends ReconfigurableBase
   public final static String EMPTY_DEL_HINT = "";
   final AtomicInteger xmitsInProgress = new AtomicInteger();
   Daemon dataXceiverServer = null;
+  /* 监听来自客户端和其他Datanode的流式接口请求 */
   DataXceiverServer xserver = null;
   Daemon localDataXceiverServer = null;
   ShortCircuitRegistry shortCircuitRegistry = null;

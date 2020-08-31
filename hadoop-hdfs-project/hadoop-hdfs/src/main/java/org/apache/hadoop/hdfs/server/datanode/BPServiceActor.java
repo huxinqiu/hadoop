@@ -98,6 +98,7 @@ class BPServiceActor implements Runnable {
   private volatile RunningState runningState = RunningState.CONNECTING;
 
   /**
+   * 用于保存两次块汇报之间Datanode存储数据块的变化
    * Between block reports (which happen on the order of once an hour) the
    * DN reports smaller incremental changes to its block list. This map,
    * keyed by block ID, contains the pending changes which have yet to be

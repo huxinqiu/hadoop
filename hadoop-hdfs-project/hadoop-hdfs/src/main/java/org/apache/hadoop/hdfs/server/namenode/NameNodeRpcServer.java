@@ -572,6 +572,14 @@ class NameNodeRpcServer implements NamenodeProtocols {
     return fileStatus;
   }
 
+    /**
+     * @param src path of the file being created.
+     * @param clientName name of the current client.
+     * @return hdfs文件最后一个未写满的数据块信息
+     * 如果该文件的最后一个数据块正好写满，返回空，
+     * 客户端此时会调用ClientProtocol.addBlock()方法申请一块新的Block
+     * @throws IOException AccessControlException, SafeModeException....
+     */
   @Override // ClientProtocol
   public LocatedBlock append(String src, String clientName) 
       throws IOException {

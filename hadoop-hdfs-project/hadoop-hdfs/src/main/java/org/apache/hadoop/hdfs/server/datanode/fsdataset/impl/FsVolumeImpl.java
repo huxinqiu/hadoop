@@ -47,6 +47,7 @@ import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
+ * 管理Datanode一个存储目录下的所有数据块
  * The underlying volume used to store replica.
  * 
  * It uses the {@link FsDatasetImpl} object for synchronization.

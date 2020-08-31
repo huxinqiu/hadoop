@@ -53,6 +53,7 @@ import org.apache.hadoop.util.ShutdownHookManager;
 import org.apache.hadoop.util.Time;
 
 /**
+ * 管理一个指定块池在一个指定存储目录下的所有数据块
  * A block pool slice represents a portion of a block pool stored on a volume.  
  * Taken together, all BlockPoolSlices sharing a block pool ID across a 
  * cluster represent a single block pool.

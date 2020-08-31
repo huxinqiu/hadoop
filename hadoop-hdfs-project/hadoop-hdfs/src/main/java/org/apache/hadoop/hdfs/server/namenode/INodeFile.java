@@ -110,6 +110,11 @@ public class INodeFile extends INodeWithAdditionalFields
     }
   }
 
+  /**
+   * 前4bit：存储策略
+   * 中间12bit：当前文件备份系数
+   * 后48bit：文件数据块大小
+   */
   private long header = 0L;
 
   private BlockInfo[] blocks;

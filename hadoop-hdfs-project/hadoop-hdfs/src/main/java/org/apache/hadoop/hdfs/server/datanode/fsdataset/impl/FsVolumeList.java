@@ -30,6 +30,10 @@ import org.apache.hadoop.hdfs.server.datanode.fsdataset.VolumeChoosingPolicy;
 import org.apache.hadoop.util.DiskChecker.DiskErrorException;
 import org.apache.hadoop.util.Time;
 
+/**
+ * 保存Datanode上所有的FsVolumeImpl对象
+ * 对FsDatasetImpl提供类似磁盘的服务
+ */
 class FsVolumeList {
   /**
    * Read access to this unmodifiable list is not synchronized.

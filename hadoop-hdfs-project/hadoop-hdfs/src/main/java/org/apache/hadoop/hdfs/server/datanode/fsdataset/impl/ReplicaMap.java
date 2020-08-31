@@ -26,6 +26,7 @@ import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.datanode.ReplicaInfo;
 
 /**
+ * 维护Datanode上所有数据块副本的状态
  * Maintains the replica map. 
  */
 class ReplicaMap {

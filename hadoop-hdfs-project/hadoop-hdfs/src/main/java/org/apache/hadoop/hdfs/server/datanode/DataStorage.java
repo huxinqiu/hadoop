@@ -54,7 +54,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-/** 
+/**
+ * 管理与组织Datanode磁盘存储目录
+ * 管理Datanode存储空间生命周期（升级、回滚、提交）
  * Data storage information file.
  * <p>
  * @see Storage

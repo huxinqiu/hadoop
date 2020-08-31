@@ -329,7 +329,7 @@ public class DFSClient implements java.io.Closeable, RemotePeerFactory,
     final long shortCircuitCacheStaleThresholdMs;
 
     public Conf(Configuration conf) {
-      // The hdfsTimeout is currently the same as the ipc timeout 
+      // The hdfsTimeout is currently the same as the ipc timeout 60000
       hdfsTimeout = Client.getTimeout(conf);
       maxFailoverAttempts = conf.getInt(
           DFS_CLIENT_FAILOVER_MAX_ATTEMPTS_KEY,

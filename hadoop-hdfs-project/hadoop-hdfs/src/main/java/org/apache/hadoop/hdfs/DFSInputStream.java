@@ -1583,6 +1583,7 @@ implements ByteBufferReadable, CanSetDropBehind, CanSetReadahead,
   private static final ByteBuffer EMPTY_BUFFER =
     ByteBuffer.allocateDirect(0).asReadOnlyBuffer();
 
+  // 零拷贝读取
   @Override
   public synchronized ByteBuffer read(ByteBufferPool bufferPool,
       int maxLength, EnumSet<ReadOption> opts) 

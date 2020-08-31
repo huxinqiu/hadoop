@@ -110,6 +110,16 @@ import org.apache.hadoop.util.Time;
  * FSDataset manages a set of data blocks.  Each block
  * has a unique name and an extent on disk.
  *
+ * 1、操作底层FsVolumeList以及DataStorage相关的方法
+ * 2、操作数据块相关方法
+ *    ① 获取数据块副本信息
+ *    ② 获取数据块副本IO流
+ *    ③ 操作数据块副本
+ * 3、操作缓存相关方法
+ * 4、操作块池方法
+ * 5、数据块汇报相关方法
+ * 6、回收站相关方法
+ *
  ***************************************************/
 @InterfaceAudience.Private
 class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
@@ -211,16 +221,30 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
   }
     
   final DataNode datanode;
+  /* 开启和关闭存储空间回收站功能 */
   final DataStorage dataStorage;
+  /**
+   * 管理Datanode上所有数据块
+   * 修改、添加、删除新的存储目录
+   */
   final FsVolumeList volumes;
+  /**
+   * 对于每一个存储目录，都会构造一个DataStorage对象
+   * storageMap就是用于保存这些存储的
+   */
   final Map<String, DatanodeStorage> storageMap;
+  /* 用于在Datanode存储上进行一些异步的IO操作，例如异步删除文件 */
   final FsDatasetAsyncDiskService asyncDiskService;
   final Daemon lazyWriter;
+  /* 用于将数据块缓存到内存中的工具 */
   final FsDatasetCache cacheManager;
   private final Configuration conf;
   private final int validVolsRequired;
   private volatile boolean fsRunning;
 
+  /**
+   * 维护Datanode上所有数据块副本的状态
+   */
   final ReplicaMap volumeMap;
   final RamDiskReplicaTracker ramDiskReplicaTracker;
   final RamDiskAsyncLazyPersistService asyncLazyPersistService;
@@ -853,6 +877,10 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
 
 
   @Override  // FsDatasetSpi
+  // 1、将当前副本从缓存中移出
+  // 2、去除该数据块文件的硬链接
+  // 3、将数据块移动到rbw目录
+  // 4、构造ReplicaBeingWritten更新volumeMap
   public synchronized ReplicaInPipeline append(ExtendedBlock b,
       long newGS, long expectedBlockLen) throws IOException {
     // If the block was successfully finalized because all packets
@@ -1158,7 +1186,8 @@ class FsDatasetImpl implements FsDatasetSpi<FsVolumeImpl> {
     
     return rbw;
   }
-  
+
+  // 从其他Datanode成功的接收了复制的数据块时，在BlockReceiver.receiveBlock()方法中调用的
   @Override // FsDatasetSpi
   public synchronized ReplicaInPipeline convertTemporaryToRbw(
       final ExtendedBlock b) throws IOException {

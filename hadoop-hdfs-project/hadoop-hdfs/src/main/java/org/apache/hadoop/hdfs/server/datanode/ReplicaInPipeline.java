@@ -30,7 +30,12 @@ import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.util.DataChecksum;
 import org.apache.hadoop.util.StringUtils;
 
-/** 
+/**
+ * Temporary
+ * Datanode之间复制数据块或数据块平衡操作时，正在写入副本的状态
+ *
+ * 对客户端不可见，并且会在Datanode重启时，直接被删除
+ *
  * This class defines a replica in a pipeline, which
  * includes a persistent replica being written to by a dfs client or
  * a temporary replica being replicated by a source datanode or

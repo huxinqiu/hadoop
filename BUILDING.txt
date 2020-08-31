@@ -150,6 +150,9 @@ At last, import to eclipse by specifying the root directory of the project via
 ----------------------------------------------------------------------------------
 Building distributions:
 
+export PATH=/opt/protobuf-2.5.0/bin:$PATH
+mvn clean package -Pdist,native,src -DskipTests -Dtar -Dmaven.javadoc.skip=true
+
 Create binary distribution without native code and without documentation:
 
   $ mvn package -Pdist -DskipTests -Dtar

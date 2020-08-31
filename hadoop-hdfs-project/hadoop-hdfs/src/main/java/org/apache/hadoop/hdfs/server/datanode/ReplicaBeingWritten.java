@@ -23,7 +23,11 @@ import org.apache.hadoop.hdfs.protocol.Block;
 import org.apache.hadoop.hdfs.server.common.HdfsServerConstants.ReplicaState;
 import org.apache.hadoop.hdfs.server.datanode.fsdataset.FsVolumeSpi;
 
-/** This class represents replicas being written. 
+/**
+ * 刚刚由客户端创建的副本，或者进行追加写操作的副本
+ * 副本的数据正在被写入，部分数据对客户端可见
+ *
+ * This class represents replicas being written.
  * Those are the replicas that
  * are created in a pipeline initiated by a dfs client.
  */

@@ -114,6 +114,7 @@ public class FsDatasetCache {
       .class);
 
   /**
+   * 当前Datanode上所有缓存数据块的信息
    * Stores MappableBlock objects and the states they're in.
    */
   private final HashMap<ExtendedBlockId, Value> mappableBlockMap =
